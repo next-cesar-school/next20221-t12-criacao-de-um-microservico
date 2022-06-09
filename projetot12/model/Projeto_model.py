@@ -1,7 +1,7 @@
 from SQL_Alchemy import db
 
 
-class Projeto(db.Model):
+class Projeto_model(db.Model):
     # id_colaborador = gerente
     __tablename__ = "projetos"
     id_projeto = db.Column(db.Integer, primary_key=True)

@@ -5,7 +5,7 @@ projeto_colaborador = db.Table("projeto_colaborador",
                                db.Column(db.Integer, db.ForeignKey("projetos.id_projeto")))
 
 
-class Colaborador(db.Model):
+class Colaborador_model(db.Model):
     __tablename__ = "colaboradores"
     id_colaborador = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50))

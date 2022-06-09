@@ -3,4 +3,4 @@ from model.Cargo_model import Cargo_model
 
 class Cargos(Resource):
     def get(self):
-        return {"cargos": [cargo for cargo in Cargo_model.query.all()]} 
+        return {1:"Gerente", 2:"Desenvolvedor", 3:"Designer"}

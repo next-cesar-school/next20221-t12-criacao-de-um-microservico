@@ -1,7 +1,7 @@
 from SQL_Alchemy import db
 
 
-class Centro_de_custo(db.Model):
+class Centro_de_custo_model(db.Model):
     __tablename__ = "centros"
     id_centro = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String, notnullable=True)
