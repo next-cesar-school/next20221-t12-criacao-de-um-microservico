@@ -1,16 +1,20 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from flask import Flask
+from flask_restful import Api
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from resources.Cargo import Cargos
 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
+api = Api(app)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+@app.before_first_request
+def criar_banco():
+    db.create_all()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+api.add_resource(Cargos, "/cargos")
+
+if __name__ == "__main__":
+    from SQL_Alchemy import db
+    db.init_app(app)
+    app.run(debug=True)

@@ -16,8 +16,3 @@ class Colaborador(db.Model):
         self.nome = nome
         self.id_cargo = id_cargo
 
-#    def __init__(self, id_colaborador, nome, id_cargo, id_projeto):
-#        self.id_colaborador = id_colaborador
-#        self.nome = nome
-#        self.id_cargo = id_cargo
-#        self.id_projeto = id_projeto

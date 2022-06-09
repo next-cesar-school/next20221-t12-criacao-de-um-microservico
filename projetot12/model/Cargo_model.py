@@ -1,7 +1,7 @@
 from SQL_Alchemy import db
 
 
-class Cargo(db.Model):
+class Cargo_model(db.Model):
     __tablename__ = "cargos"
     id_cargo = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(50))
