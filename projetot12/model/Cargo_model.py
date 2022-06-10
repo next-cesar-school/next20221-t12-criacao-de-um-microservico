@@ -1,3 +1,4 @@
+from model.Colaborador_model import Colaborador_model
 from sql_alchemy import db
 
 class Cargo_model(db.Model):

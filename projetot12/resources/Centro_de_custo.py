@@ -16,7 +16,8 @@ class Centros_de_custo(Resource):
 
 class Centro_de_custo(Resource):
     def get(self, nome):
-        return Centro_de_custo_model.find_centro(nome)
+        centro = Centro_de_custo_model.find_centro(nome)
+        return centro.json()
 
     def delete(self, nome):
         centro = Centro_de_custo_model.find_centro(nome)

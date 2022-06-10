@@ -16,7 +16,8 @@ class Cargos(Resource):
 
 class Cargo(Resource):
     def get(self, nome):
-        return Cargo_model.find_cargo(nome)
+        cargo = Cargo_model.find_cargo(nome)
+        return cargo.json()
 
     def delete(self, nome):
         cargo = Cargo_model.find_cargo(nome)
