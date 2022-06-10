@@ -1,9 +1,5 @@
 from sql_alchemy import db
 
-projeto_colaborador = db.Table("projeto_colaborador",
-                               db.Column(db.Integer, db.ForeignKey("colaboradores.id_colaborador")),
-                               db.Column(db.Integer, db.ForeignKey("projetos.id_projeto")))
-
 
 class Colaborador_model(db.Model):
     __tablename__ = "colaboradores"
