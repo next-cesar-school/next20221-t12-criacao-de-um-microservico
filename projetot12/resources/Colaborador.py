@@ -12,15 +12,25 @@ class Colaboradores(Resource):
     def post(self):
         dados = atributos.parse_args()
         colaborador = Colaborador_model(**dados)
-        colaborador.save_colaborador()
-        return colaborador.json()
+        isColaborador = Colaborador_model.find_colaborador(colaborador.nome)
+        if isColaborador:
+            return {'message': "O colaborador '{} já está cadastrado.".format(colaborador.nome)}, 400
+        try:
+            colaborador.save_colaborador()
+        except:
+            return {"message": "Ocorreu um erro ao tentar cadastrar o novo colaborador."}, 500 #internal server error
+        return colaborador.json(), 201
 
 class Colaborador(Resource):
     def get(self, nome):
         colaborador = Colaborador_model.find_colaborador(nome)
-        return colaborador.json()
+        if colaborador:
+            return colaborador.json()
+        return {'message': 'Colaborador não cadastrado.'}, 404
 
     def delete(self, nome):
         colaborador = Colaborador_model.find_colaborador(nome)
-        colaborador.delete_colaborador()
-        return {'message': 'Colaborador deletado.'}
+        if colaborador:
+            colaborador.delete_colaborador()
+            return {'message': 'Colaborador deletado.'}
+        return {'message': 'Colaborador não encontrado.'}, 404

@@ -14,10 +14,10 @@ class Projeto_model(db.Model):
     #data_inicio = db.Column(db.DateTime)
     #data_final = db.Column(db.DateTime)
     id_centro = db.Column(db.Integer, db.ForeignKey("centros.id_centro"))
-    colaboradores = db.relationship('Colaborador_model', secondary=projeto_colaborador)
+    colaboradores = db.relationship('Colaborador_model', secondary=projeto_colaborador, backref='colaboradores')
 
 
-    def __init__(self, nome, status, flag, id_centro, *colaboradores):
+    def __init__(self, nome, status, flag, id_centro, colaboradores):
         self.nome = nome
         self.status = status
         self.flag = flag
@@ -47,4 +47,22 @@ class Projeto_model(db.Model):
     @classmethod
     def find_projeto(cls, nome):
         projeto = cls.query.filter_by(nome=nome).first()
-        return projeto
+        if projeto:
+            return projeto
+        return None
+
+    @classmethod
+    def find_by_id(cls, id_projeto):
+        projeto = cls.query.filter_by(id_projeto=id_projeto).first()
+        if projeto:
+            return projeto
+        return None
+
+    def update_projeto(self, nome, status, flag, id_centro, colaboradores):
+        self.nome = nome
+        self.status = status
+        self.flag = flag
+        #self.data_inicio = data_inicio
+        #self.data_final = data_final
+        self.id_centro = id_centro
+        self.colaboradores = colaboradores

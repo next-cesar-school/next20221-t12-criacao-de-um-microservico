@@ -27,4 +27,6 @@ class Cargo_model(db.Model):
     @classmethod
     def find_cargo(cls, nome):
         cargo = cls.query.filter_by(nome=nome).first()
-        return cargo
+        if cargo:
+            return cargo
+        return None

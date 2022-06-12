@@ -29,4 +29,6 @@ class Colaborador_model(db.Model):
     @classmethod
     def find_colaborador(cls, nome):
         colaborador = cls.query.filter_by(nome=nome).first()
-        return colaborador
+        if colaborador:
+            return colaborador
+        return None

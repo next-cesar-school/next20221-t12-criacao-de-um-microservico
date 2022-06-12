@@ -16,18 +16,38 @@ class Projetos(Resource):
     def post(self):
         dados = atributos.parse_args()
         projeto = Projeto_model(**dados)
-        projeto.save_projeto()
-        return projeto.json()
+        isProjeto = Projeto_model.find_projeto(projeto.nome)
+        if isProjeto:
+            return {'message': "O projeto '{} já está cadastrado.".format(projeto.nome)}, 400
+        try:
+            projeto.save_projeto()
+        except:
+            return {"message": "Ocorreu um erro ao tentar cadastrar o novo projeto."}, 500 #internal server error
+        return projeto.json(), 201
 
 class Projeto(Resource):
     def get(self, nome):
         projeto = Projeto_model.find_projeto(nome)
-        return projeto.json()
-
-    def put(self, nome):
-      pass
+        if projeto:
+            return projeto.json()
+        return {'message': 'Projeto não cadastrado.'}, 404
 
     def delete(self, nome):
         projeto = Projeto_model.find_projeto(nome)
-        projeto.delete_projeto()
-        return {'message': 'Projeto apagado.'}
+        if projeto:
+            projeto.delete_projeto()
+            return {'message': 'Projeto apagado.'}
+        return {'message': 'Projeto não encontrado.'}, 404
+
+class UpdateProjeto(Resource):
+    def put(self, id_projeto):
+        dados = atributos.parse_args()
+        projeto_encontrado = Projeto_model.find_by_id(id_projeto)
+        if projeto_encontrado:
+            projeto_encontrado.update_projeto(**dados)
+            try:
+                projeto_encontrado.save_projeto()
+                return projeto_encontrado.json(), 200
+            except:
+                return {"message": "Ocorreu um erro ao tentar atualizar o projeto."}, 500 #internal server error
+        return {'message': 'Projeto não encontrado.'}, 404

@@ -11,15 +11,25 @@ class Centros_de_custo(Resource):
     def post(self):
         dados = atributos.parse_args()
         centro = Centro_de_custo_model(**dados)
-        centro.save_centro()
-        return centro.json()
+        isCentro = Centro_de_custo_model.find_centro(centro.nome)
+        if isCentro:
+            return {'message': "O centro de custo '{} já está cadastrado.".format(centro.nome)}, 400
+        try:
+            centro.save_centro()
+        except:
+            return {"message": "Ocorreu um erro ao tentar cadastrar o novo centro de custo."}, 500 #internal server error
+        return centro.json(), 201
 
 class Centro_de_custo(Resource):
     def get(self, nome):
         centro = Centro_de_custo_model.find_centro(nome)
-        return centro.json()
+        if centro:
+            return centro.json()
+        return {'message': 'Centro não cadastrado.'}, 404
 
     def delete(self, nome):
         centro = Centro_de_custo_model.find_centro(nome)
-        centro.delete_centro()
-        return {'message': 'Centro deletado.'}
+        if centro:
+            centro.delete_centro()
+            return {'message': 'Centro deletado.'}
+        return {'message': 'Centro não cadastrado.'}, 404

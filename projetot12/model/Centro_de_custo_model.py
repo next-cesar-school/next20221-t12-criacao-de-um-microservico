@@ -26,4 +26,6 @@ class Centro_de_custo_model(db.Model):
     @classmethod
     def find_centro(cls, nome):
         centro = cls.query.filter_by(nome=nome).first()
-        return centro
+        if centro:
+            return centro
+        return None

@@ -11,15 +11,25 @@ class Cargos(Resource):
     def post(self):
         dados = atributos.parse_args()
         cargo = Cargo_model(**dados)
-        cargo.save_cargo()
-        return cargo.json()
+        isCargo = Cargo_model.find_cargo(cargo.nome)
+        if isCargo:
+            return {'message': "O cargo '{} já está cadastrado.".format(cargo.nome)}, 400
+        try:
+            cargo.save_cargo()
+        except:
+            return {"message": "Ocorreu um erro ao tentar cadastrar o novo cargo."}, 500 #internal server error
+        return cargo.json(), 201
 
 class Cargo(Resource):
     def get(self, nome):
         cargo = Cargo_model.find_cargo(nome)
-        return cargo.json()
+        if cargo:
+            return cargo.json()
+        return {'message': 'Cargo não cadastrado.'}, 404
 
     def delete(self, nome):
         cargo = Cargo_model.find_cargo(nome)
-        cargo.delete_cargo()
-        return {'message': 'Cargo deletado.'}
+        if cargo:
+            cargo.delete_cargo()
+            return {'message': 'Cargo apagado.'}
+        return {'message': 'Cargo não encontrado.'}, 404

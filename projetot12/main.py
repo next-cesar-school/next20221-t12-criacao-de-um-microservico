@@ -3,7 +3,7 @@ from flask_restful import Api
 from resources.Cargo import Cargos, Cargo
 from resources.Centro_de_custo import Centros_de_custo, Centro_de_custo
 from resources.Colaborador import Colaboradores, Colaborador
-from resources.Projeto import Projetos, Projeto
+from resources.Projeto import Projetos, Projeto, UpdateProjeto
 
 
 app = Flask(__name__)
@@ -27,6 +27,7 @@ api.add_resource(Colaboradores, '/colaboradores')
 api.add_resource(Colaborador, '/colaboradores/<string:nome>')
 api.add_resource(Projetos, '/projetos')
 api.add_resource(Projeto, '/projetos/<string:nome>')
+api.add_resource(UpdateProjeto, '/projetos/<string:id_projeto>')
 
 if __name__ == "__main__":
     from sql_alchemy import db
