@@ -7,7 +7,9 @@ class Colaborador_model(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     id_cargo = db.Column(db.Integer, db.ForeignKey("cargos.id_cargo"))
 
-    def __init__(self, nome, id_cargo):
+    def __init__(self, nome, id_cargo, id_colaborador=None):
+        if id_colaborador != None:
+            self.id_colaborador = id_colaborador
         self.nome = nome
         self.id_cargo = id_cargo
 

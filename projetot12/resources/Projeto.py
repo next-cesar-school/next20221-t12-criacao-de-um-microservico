@@ -1,12 +1,15 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, inputs
 from model.Projeto_model import Projeto_model
+from datetime import datetime
 
 atributos = reqparse.RequestParser()
 atributos.add_argument('nome', type=str, required=True, help="The field 'nome' must be informed")
 atributos.add_argument('status', type=str)
 atributos.add_argument('flag', type=str)
+atributos.add_argument('data_inicio', type=lambda x:datetime.strptime(x, '%Y-%m-%d').date())
+atributos.add_argument('data_final', type=lambda x:datetime.strptime(x, '%Y-%m-%d').date())
 atributos.add_argument('id_centro', type=int, required=True, help="The field 'id_centro' must be informed")
-atributos.add_argument('colaboradores', type=int, required=True, help="The field 'colaboradores' must be informed")
+atributos.add_argument('colaboradores', type=list, location='json', required=True, help="The field 'colaboradores' must be informed")
 
 #nome, status, flag, id_centro
 class Projetos(Resource):
@@ -18,11 +21,11 @@ class Projetos(Resource):
         projeto = Projeto_model(**dados)
         isProjeto = Projeto_model.find_projeto(projeto.nome)
         if isProjeto:
-            return {'message': "O projeto '{} já está cadastrado.".format(projeto.nome)}, 400
-        try:
-            projeto.save_projeto()
-        except:
-            return {"message": "Ocorreu um erro ao tentar cadastrar o novo projeto."}, 500 #internal server error
+           return {'message': "O projeto '{} já está cadastrado.".format(projeto.nome)}, 400
+        #try:
+        projeto.save_projeto()
+        #except:
+        #    return {"message": "Ocorreu um erro ao tentar cadastrar o novo projeto."}, 500 #internal server error
         return projeto.json(), 201
 
 class Projeto(Resource):
