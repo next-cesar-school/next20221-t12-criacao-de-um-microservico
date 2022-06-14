@@ -1,18 +1,18 @@
-from flask_restful import Resource, reqparse, inputs
-from model.Projeto_model import Projeto_model
-from datetime import datetime
+from flask_restful import Resource, reqparse
+from model.projeto_model import Projeto_model
+
 
 atributos = reqparse.RequestParser()
 atributos.add_argument('nome', type=str, required=True, help="The field 'nome' must be informed")
 atributos.add_argument('status', type=str)
 atributos.add_argument('flag', type=str)
-atributos.add_argument('data_inicio', type=lambda x:datetime.strptime(x, '%Y-%m-%d').date())
-atributos.add_argument('data_final', type=lambda x:datetime.strptime(x, '%Y-%m-%d').date())
+#atributos.add_argument('data_inicio', type=str)
+#atributos.add_argument('data_final', type=str)
 atributos.add_argument('id_centro', type=int, required=True, help="The field 'id_centro' must be informed")
-atributos.add_argument('colaboradores', type=list, location='json', required=True, help="The field 'colaboradores' must be informed")
+atributos.add_argument('colaboradores', type=dict, action='append', location='json', required=True, help="The field 'colaboradores' must be informed")
 
 #nome, status, flag, id_centro
-class Projetos(Resource):
+class projetos(Resource):
     def get(self):
         return {'projetos': [projeto.json() for projeto in Projeto_model.query.all()]}
 
@@ -22,13 +22,13 @@ class Projetos(Resource):
         isProjeto = Projeto_model.find_projeto(projeto.nome)
         if isProjeto:
            return {'message': "O projeto '{} já está cadastrado.".format(projeto.nome)}, 400
-        #try:
-        projeto.save_projeto()
-        #except:
-        #    return {"message": "Ocorreu um erro ao tentar cadastrar o novo projeto."}, 500 #internal server error
+        try:
+            projeto.save_projeto()
+        except:
+            return {"message": "Ocorreu um erro ao tentar cadastrar o novo projeto."}, 500 #internal server error
         return projeto.json(), 201
 
-class Projeto(Resource):
+class projeto(Resource):
     def get(self, nome):
         projeto = Projeto_model.find_projeto(nome)
         if projeto:
@@ -42,7 +42,7 @@ class Projeto(Resource):
             return {'message': 'Projeto apagado.'}
         return {'message': 'Projeto não encontrado.'}, 404
 
-class UpdateProjeto(Resource):
+class Update_projeto(Resource):
     def put(self, id_projeto):
         dados = atributos.parse_args()
         projeto_encontrado = Projeto_model.find_by_id(id_projeto)

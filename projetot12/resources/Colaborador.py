@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from model.Colaborador_model import Colaborador_model
+from model.colaborador_model import Colaborador_model
 
 atributos = reqparse.RequestParser()
 atributos.add_argument('nome', type=str, required=True, help="The field 'nome' must be informed")

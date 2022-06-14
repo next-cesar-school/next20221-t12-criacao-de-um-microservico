@@ -1,9 +1,9 @@
 from sql_alchemy import db
-from model.Colaborador_model import Colaborador_model
+from model.colaborador_model import Colaborador_model
 
 projeto_colaborador = db.Table('projeto_colaborador',
-                               db.Column('id_colaborador', db.Integer, db.ForeignKey('colaboradores.id_colaborador'), primary_key=True),
-                               db.Column('id_projeto', db.Integer, db.ForeignKey('projetos.id_projeto'), primary_key=True))
+                               db.Column('id_projeto', db.Integer, db.ForeignKey('projetos.id_projeto'), primary_key=True),
+                               db.Column('id_colaborador', db.Integer, db.ForeignKey('colaboradores.id_colaborador'), primary_key=True))
 
 class Projeto_model(db.Model):
     # id_colaborador = gerente
@@ -12,21 +12,21 @@ class Projeto_model(db.Model):
     nome = db.Column(db.String(50), nullable=False)
     status = db.Column(db.String(50))
     flag = db.Column(db.String(50))
-    data_inicio = db.Column(db.Date)
-    data_final = db.Column(db.Date)
+    #data_inicio = db.Column(db.Date)
+    #data_final = db.Column(db.Date)
     id_centro = db.Column(db.Integer, db.ForeignKey("centros.id_centro"))
-    colaboradores = db.relationship('Colaborador_model', secondary=projeto_colaborador, backref='colaboradores')
+    colaboradores = db.relationship('Colaborador_model', secondary=projeto_colaborador)
 
 
-    def __init__(self, nome, status, flag, data_inicio, data_final, id_centro, colaboradores):
+    def __init__(self, nome, status, flag, id_centro, colaboradores):
         self.nome = nome
         self.status = status
         self.flag = flag
-        self.data_inicio = data_inicio
-        self.data_final = data_final
+        #self.data_inicio = data_inicio
+        #self.data_final = data_final
         self.id_centro = id_centro
-        colaboradoresparser = [Colaborador_model(colaborador['nome'], colaborador['id_cargo'], colaborador['id_colaborador']) for colaborador  in colaboradores]
-        self.colaboradores = colaboradoresparser
+        #colaboradoresparser = [Colaborador_model(colaborador['nome'], colaborador['id_cargo'], colaborador['id_colaborador']) for colaborador  in colaboradores]
+        self.colaboradores = [(Colaborador_model.find_by_id(colaborador['id_colaborador'])) for colaborador in colaboradores]
 
     def json(self):
         return {
@@ -34,8 +34,8 @@ class Projeto_model(db.Model):
             'nome': self.nome,
             'status': self.status,
             'flag': self.flag,
-            'data_inicio': self.data_inicio,
-            'data_final': self.data_final,
+            #'data_inicio': self.data_inicio,
+            #'data_final': self.data_final,
             'id_centro': self.id_centro,
             'colaboradores': [colaborador.json() for colaborador in self.colaboradores]
         }
@@ -69,4 +69,4 @@ class Projeto_model(db.Model):
         #self.data_inicio = data_inicio
         #self.data_final = data_final
         self.id_centro = id_centro
-        self.colaboradores = colaboradores
+        self.colaboradores = [(Colaborador_model.find_by_id(colaborador['id_colaborador'])) for colaborador in colaboradores]

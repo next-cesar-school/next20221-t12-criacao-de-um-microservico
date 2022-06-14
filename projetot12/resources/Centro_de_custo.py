@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from model.Centro_de_custo_model import Centro_de_custo_model
+from model.centro_de_custo_model import Centro_de_custo_model
 
 atributos = reqparse.RequestParser()
 atributos.add_argument('nome', type=str, required=True, help="The field 'nome' must be informed")

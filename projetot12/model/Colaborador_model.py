@@ -7,9 +7,7 @@ class Colaborador_model(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     id_cargo = db.Column(db.Integer, db.ForeignKey("cargos.id_cargo"))
 
-    def __init__(self, nome, id_cargo, id_colaborador=None):
-        if id_colaborador != None:
-            self.id_colaborador = id_colaborador
+    def __init__(self, nome, id_cargo):
         self.nome = nome
         self.id_cargo = id_cargo
 
@@ -31,6 +29,13 @@ class Colaborador_model(db.Model):
     @classmethod
     def find_colaborador(cls, nome):
         colaborador = cls.query.filter_by(nome=nome).first()
+        if colaborador:
+            return colaborador
+        return None
+
+    @classmethod
+    def find_by_id(cls, id_colaborador):
+        colaborador = cls.query.filter_by(id_colaborador=id_colaborador).first()
         if colaborador:
             return colaborador
         return None

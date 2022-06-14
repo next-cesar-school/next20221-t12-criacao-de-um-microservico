@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_restful import Api
-from resources.Cargo import Cargos, Cargo
-from resources.Centro_de_custo import Centros_de_custo, Centro_de_custo
-from resources.Colaborador import Colaboradores, Colaborador
-from resources.Projeto import Projetos, Projeto, UpdateProjeto
+from resources.cargo import Cargos, Cargo
+from resources.centro_de_custo import Centros_de_custo, Centro_de_custo
+from resources.colaborador import Colaboradores, Colaborador
+from resources.projeto import projetos, projeto, Update_projeto
 
 
 app = Flask(__name__)
@@ -25,9 +25,9 @@ api.add_resource(Centros_de_custo, "/centros")
 api.add_resource(Centro_de_custo, "/centros/<string:nome>")
 api.add_resource(Colaboradores, '/colaboradores')
 api.add_resource(Colaborador, '/colaboradores/<string:nome>')
-api.add_resource(Projetos, '/projetos')
-api.add_resource(Projeto, '/projetos/<string:nome>')
-api.add_resource(UpdateProjeto, '/projetos/<string:id_projeto>')
+api.add_resource(projetos, '/projetos')
+api.add_resource(projeto, '/projetos/<string:nome>')
+api.add_resource(Update_projeto, '/projetos/<string:id_projeto>')
 
 if __name__ == "__main__":
     from sql_alchemy import db

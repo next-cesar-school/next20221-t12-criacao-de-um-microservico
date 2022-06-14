@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from model.Cargo_model import Cargo_model
+from model.cargo_model import Cargo_model
 
 atributos = reqparse.RequestParser()
 atributos.add_argument('nome', type=str, required=True, help="The field 'nome' must be informed")
