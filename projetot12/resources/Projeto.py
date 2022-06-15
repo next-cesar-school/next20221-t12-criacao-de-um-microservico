@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from model.projeto_model import Projeto_model
+from flask_jwt_extended import jwt_required
 
 
 atributos = reqparse.RequestParser()
@@ -13,9 +14,27 @@ atributos.add_argument('colaboradores', type=dict, action='append', location='js
 
 
 class Projetos(Resource):
-    def get(self):
-        return {'projetos': [projeto.json() for projeto in Projeto_model.query.all()]}
+    query_params = reqparse.RequestParser()
+    query_params.add_argument("status", type=str, default="", location="args")
+    query_params.add_argument("flag", type=str, default="", location="args")
+    query_params.add_argument("id_centro", type=int, default=0, location="args")
 
+    
+    def get(self):
+        #return {'projetos': [projeto.json() for projeto in Projeto_model.query.all()]}
+        filters = Projetos.query_params.parse_args()
+        query = Projeto_model.query
+
+        if filters["status"]:
+            query = query.filter(Projeto_model.status == filters["status"])
+        if filters["flag"]:
+            query = query.filter(Projeto_model.flag == filters["flag"])
+        if filters["id_centro"]:
+            query = query.filter(Projeto_model.id_centro == filters["id_centro"])
+        
+        return {'projetos': [projeto.json() for projeto in query]}
+
+    @jwt_required()
     def post(self):
         dados = atributos.parse_args()
         projeto = Projeto_model(**dados)
@@ -23,7 +42,7 @@ class Projetos(Resource):
             if i.id_cargo == 1:
                 isProjeto = Projeto_model.find_projeto(projeto.nome)
                 if isProjeto:
-                    return {'message': "O projeto '{} já está cadastrado.".format(projeto.nome)}, 400
+                    return {'message': "O projeto '{}' já está cadastrado.".format(projeto.nome)}, 400
                 try:
                     projeto.save_projeto()
                 except:
@@ -41,6 +60,7 @@ class Projeto(Resource):
             return projeto.json()
         return {'message': 'Projeto não cadastrado.'}, 404
 
+    @jwt_required()
     def put(self, id_projeto):
         dados = atributos.parse_args()
         projeto_encontrado = Projeto_model.find_by_id(id_projeto)
@@ -58,6 +78,7 @@ class Projeto(Resource):
             return {"message": "É necessário designar ao menos um gerente para o projeto."}, 400
         return {'message': 'Projeto não encontrado.'}, 404
 
+    @jwt_required()
     def delete(self, id_projeto):
         projeto = Projeto_model.find_by_id(id_projeto)
         if projeto:

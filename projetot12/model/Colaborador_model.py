@@ -8,12 +8,16 @@ class Colaborador_model(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     id_cargo = db.Column(db.Integer, db.ForeignKey("cargos.id_cargo"))
     id_centro = db.Column(db.Integer, db.ForeignKey("centros.id_centro"))
+    login = db.Column(db.String(50))
+    senha = db.Column(db.String(50))
 
-    def __init__(self, matricula, nome, id_cargo, id_centro):
+    def __init__(self, matricula, nome, id_cargo, id_centro, login, senha):
         self.matricula = matricula
         self.nome = nome
         self.id_cargo = id_cargo
         self.id_centro = id_centro
+        self.login = login
+        self.senha = senha
 
     def json(self):
         return {
@@ -21,7 +25,8 @@ class Colaborador_model(db.Model):
             'matricula': self.matricula,
             'nome': self.nome,
             'id_cargo': self.id_cargo,
-            'id_centro': self.id_centro
+            'id_centro': self.id_centro,
+            'login': self.login
         }
 
     def save_colaborador(self):
@@ -46,8 +51,17 @@ class Colaborador_model(db.Model):
             return colaborador
         return None
 
-    def update_colaborador(self, matricula, nome, id_cargo, id_centro):
-        self.matricula = matricula
+    @classmethod
+    def find_by_login(cls, login):
+        # SELECT * FROM usuarios WHERE login = $login
+        colaborador = cls.query.filter_by(login=login).first()
+        if colaborador:
+            return colaborador
+        return None
+
+    def update_colaborador(self, nome, id_cargo, id_centro, login, senha):
         self.nome = nome
         self.id_cargo = id_cargo
         self.id_centro = id_centro
+        self.login = login
+        self.senha = senha
