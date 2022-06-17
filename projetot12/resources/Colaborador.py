@@ -34,7 +34,7 @@ class Colaboradores(Resource):
 
 class Colaborador(Resource):
     def get(self, id_colaborador):
-        colaborador = Colaborador_model.find_colaborador(id_colaborador)
+        colaborador = Colaborador_model.find_by_id(id_colaborador)
         if colaborador:
             return colaborador.json()
         return {'message': 'Colaborador não cadastrado.'}, 404

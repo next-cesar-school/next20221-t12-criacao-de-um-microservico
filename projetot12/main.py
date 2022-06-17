@@ -28,12 +28,12 @@ def verifica_blacklist(self, token):
 
 @jwt.revoked_token_loader
 def token_de_acesso_invalidado(jwt_header, jwt_payload):
-    return jsonify({'message': 'Você já saiu do sistema.'}), 401 # unauthorized
+    return jsonify({'message': 'Você não está autenticado no sistema.'}), 401 # unauthorized
 
 
 @app.route('/')
 def pag_inicial():
-    return '<h1>REST API com Flask!!</h1>'
+    return '<h1>REST API com Flask para gestão de projetos!!</h1>'
 
 
 api.add_resource(Cargos, '/cargos')
